@@ -1,5 +1,6 @@
 package com.pedro.demo.entity;
 
+import com.pedro.demo.Validation.CourseCode;
 import jakarta.validation.constraints.*;
 
 
@@ -20,6 +21,17 @@ public class Customer {
     @Pattern(regexp = "^[a-zA-Z0-9]{5}", message = "Only 5 chars/digits")
     @Size(min = 5, max = 5)
     private String postalCode;
+
+    @CourseCode(value = "TOPS", message = "must start with TOPS")
+    private String courseCode;
+
+    public String getCourseCode() {
+        return courseCode;
+    }
+
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode;
+    }
 
     public String getPostalCode() {
         return postalCode;
