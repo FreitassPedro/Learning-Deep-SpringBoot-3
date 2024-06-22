@@ -15,10 +15,10 @@
 <br><br>
 
 <form th:action="@{/processForm}" th:object="${customer}" method="POST">
-    First name: <input type="text" th:field="*{firstName}" />
+    First name: <input type="text" th:field="*{firstName}"/>
     <br><br>
 
-    Last name: <input type="text" th:field="*{lastName}" />
+    Last name: <input type="text" th:field="*{lastName}"/>
 
     <!-- Mensagem de erro (if present) -->
     <span th:if="${#fields.hasErrors('lastName')}"
@@ -26,7 +26,20 @@
           class="error"></span>
     <br><br>
 
-    <input type="submit" value="Submit" />
+    Free passes: <input type="text" th:field="*{freePasses}" />
+    <span th:if="${#fields.hasErrors('freePasses')}"
+          th:errors="*{freePasses}"
+          class="error"></span>
+
+    <br><br>
+
+    Postal Code: <input type="text" th:field="*{postalCode}" />
+    <span th:if="${#fields.hasErrors('postalCode')}"
+          th:errors="*{postalCode}"
+          class="error"></span>
+
+    <br><br>
+    <input type="submit" value="Submit"/>
 
 </form>
 
