@@ -19,10 +19,10 @@
           th:object="${employee}" method="POST">
 
         <!-- Add hiden form field to handle the update-->
-        <input type="hidden" th:field="*{id}" />
+        <input type="hidden" th:field="*{id}"/>
 
         <input type="text" th:field="*{firstName}"
-        class="form-control mb4 w-25" placeholder="First Name">
+               class="form-control mb4 w-25" placeholder="First Name">
 
         <input type="text" th:field="*{lastName}"
                class="form-control mb4 w-25" placeholder="Last Name">
@@ -32,7 +32,9 @@
 
         <button type="submit" class="btn btn-info col-2">Save</button>
     </form>
-    <a href="@{/employees/list">Back to Employees List</a>
+    <hr>
+    <a th:href="@{/employees/list}">Back to Employees List</a>
+
 </div>
 
 </body>
