@@ -21,6 +21,18 @@
 </p>
 
 <hr>
+<!-- Adicionar botao link para /leaders (acesso restrito) -->
+<p>
+    <a th:href="@{/leaders}">Leadership Meeting</a>
+    (Only for manager peeps)
+</p>
+
+<p>
+    <a th:href="@{/systems}">Admin Page Configuration</a>
+    (Only for Admins)
+</p>
+
+<hr>
 
 <!-- Add logout Button-->
 <form action="#" th:action="@{/logout}" method="POST">
