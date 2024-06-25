@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public class AppleDAOImpl implements AppDAO{
+public class AppleDAOImpl implements AppDAO {
     private EntityManager entityManager;
 
     public AppleDAOImpl(EntityManager entityManager) {
@@ -26,7 +26,7 @@ public class AppleDAOImpl implements AppDAO{
 
     @Override
     public Instructor findInstructorById(int id) {
-       return entityManager.find(Instructor.class, id);
+        return entityManager.find(Instructor.class, id);
     }
 
     @Override
@@ -55,5 +55,36 @@ public class AppleDAOImpl implements AppDAO{
         List<Course> courses = query.getResultList();
 
         return courses;
+    }
+
+    @Override
+    public Instructor findInstructorByIdJoinFetch(int id) {
+        TypedQuery<Instructor> query = entityManager.createQuery(
+                "select i from Instructor i "
+                        + "JOIN FETCH i.courses "
+                       // Opcional + "JOIN FETCH i.instructorDetail "
+                        + "where i.id = :id", Instructor.class);
+
+        query.setParameter("id", id);
+        Instructor instructor = query.getSingleResult();
+
+        return instructor;
+    }
+
+    @Override
+    @Transactional
+    public void updateInstructor(Instructor instructor) {
+        entityManager.merge(instructor);
+    }
+
+    @Override
+    public Course findCourseById(int id) {
+        return entityManager.find(Course.class, id);
+    }
+
+    @Override
+    @Transactional
+    public void updateCourse(Course course) {
+        entityManager.merge(course);
     }
 }
