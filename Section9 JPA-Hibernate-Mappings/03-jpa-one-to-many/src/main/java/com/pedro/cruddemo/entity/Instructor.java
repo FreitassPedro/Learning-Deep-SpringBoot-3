@@ -29,18 +29,10 @@ public class Instructor {
     private InstructorDetail instructorDetail;
 
     @OneToMany(mappedBy = "instructor",
+            fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                     CascadeType.DETACH, CascadeType.REFRESH})
     private List<Course> courses;
-
-    // Gerando metodos bidirecionais para relacionamento
-    public void addCourse(Course tempcourse) {
-        if (courses == null) courses = new ArrayList<>();
-
-        courses.add(tempcourse);
-
-        tempcourse.setInstructor(this);
-    }
 
     public Instructor() {
     }
@@ -97,6 +89,15 @@ public class Instructor {
 
     public void setCourses(List<Course> courses) {
         this.courses = courses;
+    }
+
+    // Gerando metodos bidirecionais para relacionamento
+    public void addCourse(Course tempcourse) {
+        if (courses == null) courses = new ArrayList<>();
+
+        courses.add(tempcourse);
+
+        tempcourse.setInstructor(this);
     }
 
     @Override
