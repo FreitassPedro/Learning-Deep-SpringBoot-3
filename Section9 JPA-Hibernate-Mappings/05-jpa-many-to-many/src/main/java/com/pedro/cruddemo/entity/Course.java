@@ -26,7 +26,29 @@ public class Course {
     @JoinColumn(name = "course_id") // Gera uma chave estrangeira na tabela da entidade review
     private List<Review> reviews;
 
+    @ManyToMany(fetch = FetchType.LAZY,
+                cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+                  CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinTable(
+            name = "course_student",
+            joinColumns = @JoinColumn(name = "course_id"),
+            inverseJoinColumns = @JoinColumn(name = "student_id")
+    )
+    private List<Student> students;
+
     public Course() {}
+
+    public void addReview(Review theReview) {
+        if (reviews == null) reviews = new ArrayList<>();
+
+        reviews.add(theReview);
+    }
+
+    public void addStudent(Student stdnt) {
+        if (students == null) students = new ArrayList<>();
+
+        students.add(stdnt);
+    }
 
     public Course(String title) {
         this.title = title;
@@ -64,10 +86,12 @@ public class Course {
         this.reviews = reviews;
     }
 
-    public void addReview(Review theReview) {
-        if (reviews == null) reviews = new ArrayList<>();
+    public List<Student> getStudents() {
+        return students;
+    }
 
-        reviews.add(theReview);
+    public void setStudents(List<Student> students) {
+        this.students = students;
     }
 
     @Override

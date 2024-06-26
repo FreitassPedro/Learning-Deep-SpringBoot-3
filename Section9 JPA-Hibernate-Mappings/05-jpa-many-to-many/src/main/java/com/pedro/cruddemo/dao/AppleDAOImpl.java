@@ -1,9 +1,6 @@
 package com.pedro.cruddemo.dao;
 
-import com.pedro.cruddemo.entity.Course;
-import com.pedro.cruddemo.entity.Instructor;
-import com.pedro.cruddemo.entity.InstructorDetail;
-import com.pedro.cruddemo.entity.Review;
+import com.pedro.cruddemo.entity.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
@@ -120,5 +117,46 @@ public class AppleDAOImpl implements AppDAO {
         Course course = query.getSingleResult();
 
         return course;
+    }
+
+    @Override
+    public Course findCourseAndStudentsByCourseId(int id) {
+        TypedQuery<Course> query = entityManager.createQuery(
+                "select c from Course c "
+                        + "JOIN FETCH c.students "
+                        + "where c.id = :id", Course.class);
+       query.setParameter("id", id);
+
+       Course course = query.getSingleResult();
+       return course;
+    }
+
+    @Override
+    public Student findStudentAndCoursesByStudentId(int id) {
+
+        TypedQuery<Student> query = entityManager.createQuery(
+                "select s from Student s "
+                        + "JOIN FETCH s.courses "
+                        + "where s.id = :id", Student.class
+        );
+
+        query.setParameter("id", id);
+
+        Student student = query.getSingleResult();
+
+        return student;
+    }
+
+    @Override
+    @Transactional
+    public void update(Student student) {
+        entityManager.merge(student);
+    }
+
+    @Override
+    @Transactional
+    public void deleteStudentById(int id) {
+        Student student = entityManager.find(Student.class, id);
+        entityManager.remove(student);
     }
 }
