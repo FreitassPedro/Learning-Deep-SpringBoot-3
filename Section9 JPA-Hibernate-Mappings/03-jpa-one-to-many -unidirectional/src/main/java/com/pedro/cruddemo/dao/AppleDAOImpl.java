@@ -3,6 +3,7 @@ package com.pedro.cruddemo.dao;
 import com.pedro.cruddemo.entity.Course;
 import com.pedro.cruddemo.entity.Instructor;
 import com.pedro.cruddemo.entity.InstructorDetail;
+import com.pedro.cruddemo.entity.Review;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
@@ -98,5 +99,26 @@ public class AppleDAOImpl implements AppDAO {
     @Transactional
     public void deleteCourseById(int id) {
         entityManager.remove(findCourseById(id));
+    }
+
+    @Override
+    @Transactional
+    public void save(Course course) {
+        entityManager.persist(course);
+    }
+
+    @Override
+    public Course findCourseAndReviewByCourseId(int id) {
+        TypedQuery<Course> query = entityManager.createQuery(
+                "select c from Course c "
+                + "JOIN FETCH c.reviews "
+                + "where c.id = :id", Course.class
+        );
+
+        query.setParameter("id", id);
+
+        Course course = query.getSingleResult();
+
+        return course;
     }
 }

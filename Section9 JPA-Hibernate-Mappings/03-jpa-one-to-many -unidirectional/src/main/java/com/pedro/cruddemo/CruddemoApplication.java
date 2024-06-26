@@ -4,6 +4,7 @@ import com.pedro.cruddemo.dao.AppDAO;
 import com.pedro.cruddemo.entity.Course;
 import com.pedro.cruddemo.entity.Instructor;
 import com.pedro.cruddemo.entity.InstructorDetail;
+import com.pedro.cruddemo.entity.Review;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,28 +22,43 @@ public class CruddemoApplication {
 	@Bean
 	public CommandLineRunner commandLineRunner(AppDAO appDao) {
 		return runner -> {
-			// createInstructor(appDao);
+		//	createCourseAndReviews(appDao);
 
-			// findInstructor(appDao);
+			retrieveCourseAndReviews(appDao);
 
-			//deleteInstructor(appDao);
-
-
-			// findInstructorDetail(appDao);
-			// deleteInstructorDetail(appDao);
-
-
-			// createInstructorWithCourses(appDao);
-			// findInstructorWithCourses(appDao);
-			// findCoursesForInstructor(appDao);
-			// findInstructorWithCoursesJoinFetch(appDao);
-			
-			// updateInstructor(appDao);
-
-			// updateCourse(appDao);
-			
-			removeCourseById(appDao);
+			deleteCourseAndReviews(appDao);
 		};
+	}
+
+	private void deleteCourseAndReviews(AppDAO appDao) {
+		int id = 10;
+
+		System.out.println("Deletando Course ID: " + id);
+
+		appDao.deleteCourseById(id);
+	}
+
+	private void retrieveCourseAndReviews(AppDAO appDao) {
+		int id = 12;
+		Course courseById = appDao.findCourseAndReviewByCourseId(id);
+
+		System.out.println("Course: " + courseById);
+		System.out.println("Comments in course: " + courseById.getReviews());
+	}
+
+	private void createCourseAndReviews(AppDAO appDao) {
+		Course c1 = new Course("Java para leigos completo!");
+		Review rv1 = new Review("Adorei a aula");
+		Review rv2 = new Review("melhor que Python");
+
+		c1.addReview(rv1);
+		c1.addReview(rv2);
+
+		appDao.save(c1);
+
+		// Mostrando o objeto na tela
+		System.out.println("Curso e suas avaliações: " + c1.getReviews());
+		System.out.println("Curso: " + c1.toString());
 	}
 
 	private void removeCourseById(AppDAO appDao) {
