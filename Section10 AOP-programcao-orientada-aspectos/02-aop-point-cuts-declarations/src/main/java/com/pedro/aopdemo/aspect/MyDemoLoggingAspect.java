@@ -3,6 +3,7 @@ package com.pedro.aopdemo.aspect;
 import com.pedro.aopdemo.Account;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -15,6 +16,17 @@ import java.util.List;
 @Component
 @Order(2)
 public class MyDemoLoggingAspect {
+    @AfterThrowing(
+            pointcut = "execution(* com.pedro.aopdemo.dao.AccountDAO.findAccounts(..))",
+            throwing = "theException")
+    public void afterThrowingFindAccountsAdvice(JoinPoint joinPoint, Throwable theException) {
+        // print out which method we are advising on
+        String method = joinPoint.getSignature().toShortString();
+        System.out.println("\n====>>> Executing @AfterThrowing on method: " + method);
+
+        System.out.println("\n====>>> The exception is: " + theException);
+
+    }
 
     // add new advice for @AfterReturning on the findAccounts method
     @AfterReturning(
@@ -23,7 +35,7 @@ public class MyDemoLoggingAspect {
     public void afterReturningFindAccountsAdvice(JoinPoint joinPoint,
                                                  List<Account> output) {
         // print out which method we are advising on
-        String method  = joinPoint.getSignature().toShortString();
+        String method = joinPoint.getSignature().toShortString();
         System.out.println("\n====>> Executing @AfterReturning on method: " + method);
 
         // let's modify post-process data
@@ -53,7 +65,7 @@ public class MyDemoLoggingAspect {
         for (Object arg : args) {
             System.out.println(arg);
 
-            if(arg instanceof Account) {
+            if (arg instanceof Account) {
                 // downcast and print Account specific stuff
                 Account theAccount = (Account) arg;
                 System.out.println("account name: " + theAccount.getName() + " || account level: " + theAccount.getLevel());
@@ -61,10 +73,6 @@ public class MyDemoLoggingAspect {
             }
         }
     }
-
-
-
-
 
 
 }

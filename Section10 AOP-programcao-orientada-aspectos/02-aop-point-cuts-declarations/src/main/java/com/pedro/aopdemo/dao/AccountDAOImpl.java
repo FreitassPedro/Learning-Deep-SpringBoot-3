@@ -13,6 +13,13 @@ public class AccountDAOImpl implements AccountDAO{
 
     @Override
     public List<Account> findAccounts() {
+        return  findAccounts(false);
+    }
+
+    @Override
+    public List<Account> findAccounts(boolean tripwWire) {
+        if (tripwWire) throw new RuntimeException("No soup for you!");
+
         List<Account> myAccounts = new ArrayList<>();
 
         // create sample account and add them to our list
