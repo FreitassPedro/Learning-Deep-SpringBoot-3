@@ -2,6 +2,7 @@ package com.pedro.aopdemo.aspect;
 
 import com.pedro.aopdemo.Account;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.annotation.Order;
@@ -14,6 +15,36 @@ import java.util.List;
 @Order(2)
 public class MyDemoLoggingAspect {
 
+    @Around("execution(* com.pedro.aopdemo.service.*.getFortune(..))")
+    public Object aroundGetFortune(
+            ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+
+        // print out method we are advising on
+        String method = proceedingJoinPoint.getSignature().toShortString();
+        System.out.println("\n===>>> Executing @Around on method: " + method);
+
+        long beginTime = System.currentTimeMillis();
+
+        Object result = null;
+        try {
+            result = proceedingJoinPoint.proceed();
+        } catch (Exception ex) {
+            // log exception
+            System.out.println(ex.getMessage());
+
+            // rethrow exception
+            throw ex;
+        }
+
+        long endTime = System.currentTimeMillis();
+
+        long duration = endTime - beginTime;
+        System.out.println("\nDuration: " + duration / 1000.0 + " seconds");
+
+        return result;
+    }
+
+
 
     @After("execution(* com.pedro.aopdemo.dao.AccountDAO.findAccounts(..))")
     public void afterFinallyFindAccountsAdvice(JoinPoint joinPoint) {
@@ -21,8 +52,6 @@ public class MyDemoLoggingAspect {
         // print out which method we are advising on
         String method = joinPoint.getSignature().toShortString();
         System.out.println("\n====>>> Executing @After (finally) on method: " + method);
-
-
     }
 
     @AfterThrowing(

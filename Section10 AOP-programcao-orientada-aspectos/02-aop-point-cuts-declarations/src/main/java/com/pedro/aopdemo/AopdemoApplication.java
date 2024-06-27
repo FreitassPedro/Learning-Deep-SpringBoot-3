@@ -2,6 +2,7 @@ package com.pedro.aopdemo;
 
 import com.pedro.aopdemo.dao.AccountDAO;
 import com.pedro.aopdemo.dao.MembershipDAO;
+import com.pedro.aopdemo.service.TrafficFortuneService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,14 +18,52 @@ public class AopdemoApplication {
 	}
 
 	@Bean
-	public CommandLineRunner commandLineRunner(AccountDAO theAccountDAO, MembershipDAO membershipDAO) {
+	public CommandLineRunner commandLineRunner(AccountDAO theAccountDAO,
+											   MembershipDAO membershipDAO,
+											   TrafficFortuneService trafficFortuneService) {
 		return runner -> {
 			// demoTheBeforeAdvice(theAccountDAO, membershipDAO);
 			// demoAfterReturningAdvice(theAccountDAO);
 				
 			// demoTheAfterThrowingAdvice(theAccountDAO);
-			demoTheAfterAdvice(theAccountDAO);
+			// demoTheAfterAdvice(theAccountDAO);
+
+			// demoTheAroundAdvice(trafficFortuneService);
+			// demoTheAroundAdviceHandleException(trafficFortuneService);
+			demoTheAroundAdviceRethrowException(trafficFortuneService);
 		};
+	}
+
+	private void demoTheAroundAdviceRethrowException(TrafficFortuneService trafficFortuneService) {
+		System.out.println("\nMain Program: demoTheAroundAdviceRethrowException");
+		System.out.println("Calling getFortune()");
+
+		// Fique tranquilo se gerar uma mensagem imensa de exceção,
+		// nosso código está programado para isto!
+		boolean tripWire = true;f
+		String data = trafficFortuneService.getFortune(tripWire);
+
+		System.out.println("\nMy fortune is: " + data);
+	}
+
+	private void demoTheAroundAdviceHandleException(TrafficFortuneService trafficFortuneService) {
+		System.out.println("\nMain Program: demoTheAroundAdviceHandleException");
+		System.out.println("Calling getFortune()");
+
+		boolean tripWire = true;
+		String data = trafficFortuneService.getFortune(tripWire);
+
+		System.out.println("\nMy fortune is: " + data);
+	}
+
+
+	private void demoTheAroundAdvice(TrafficFortuneService trafficFortuneService) {
+		System.out.println("\nMain Program: demoTheAroundAdvice");
+		System.out.println("Calling getFortune()");
+
+		String data = trafficFortuneService.getFortune();
+
+		System.out.println("\nMy fortune is: " + data);
 	}
 
 	private void demoTheAfterAdvice(AccountDAO theAccountDAO) {
