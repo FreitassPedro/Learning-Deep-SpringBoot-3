@@ -2,17 +2,42 @@ package com.pedro.aopdemo.aspect;
 
 import com.pedro.aopdemo.Account;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Aspect
 @Component
 @Order(2)
 public class MyDemoLoggingAspect {
+
+    // add new advice for @AfterReturning on the findAccounts method
+    @AfterReturning(
+            pointcut = "execution(* com.pedro.aopdemo.dao.AccountDAO.findAccounts(..))",
+            returning = "output")
+    public void afterReturningFindAccountsAdvice(JoinPoint joinPoint,
+                                                 List<Account> output) {
+        // print out which method we are advising on
+        String method  = joinPoint.getSignature().toShortString();
+        System.out.println("\n====>> Executing @AfterReturning on method: " + method);
+
+        // let's modify post-process data
+        convertAccountNamesToUpperCase(output);
+
+        // print out the results of the method call
+        System.out.println("\n====>> result is: " + output);
+    }
+
+    private List<Account> convertAccountNamesToUpperCase(List<Account> output) {
+        for (Account acc : output) acc.setName(acc.getName().toUpperCase());
+        return output;
+    }
+
 
     @Before("com.pedro.aopdemo.aspect.LuvAopExpressions.forDaoPackageNoGetterSetter()")
     public void beforeAddAccountAdvice(JoinPoint joinPoint) {
